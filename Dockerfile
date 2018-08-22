@@ -5,11 +5,12 @@ ARG BIND_SYSDIR=/etc/named
 ARG BIND_VERSION=9-12-2
 ARG BIND_VERSION_DOT=9.12.2
 
-COPY named.conf ${BIND_SYSDIR}/named.conf
+COPY named.conf ${BIND_SYSDIR}/named.conf.template
 COPY entrypoint.sh /entrypoint.sh
+COPY statistics.conf /statistics.conf
 
 # install bind9
-RUN yum install -y gcc make perl-devel openssl-devel mysql-devel wget gettext \
+RUN yum install -y gcc make perl-devel openssl-devel mysql-devel libxml2-devel wget gettext \
     && curl -L https://www.isc.org/downloads/file/bind-${BIND_VERSION}/?version=tar-gz -o /tmp/bind.tar.gz \
     && tar -zxvf /tmp/bind.tar.gz -C /tmp \
     && cd /tmp/bind-${BIND_VERSION_DOT} \
@@ -20,7 +21,7 @@ RUN yum install -y gcc make perl-devel openssl-devel mysql-devel wget gettext \
 # generate conf
 RUN ${BIND_PREFIX}/sbin/rndc-confgen -r /dev/urandom > ${BIND_SYSDIR}/rndc.conf \
     && tail -n 10 ${BIND_SYSDIR}/rndc.conf | head -n 9 | sed 's/#\ //g' > /tmp/tmp.conf \
-    && sed -i '/#mark/r /tmp/tmp.conf' ${BIND_SYSDIR}/named.conf \
+    && sed -i '/#rndc/r /tmp/tmp.conf' ${BIND_SYSDIR}/named.conf.template \
     && wget -O ${BIND_SYSDIR}/named.ca  http://www.internic.net/domain/named.root \
     && yum remove -y gcc make wget \
     && yum clean all
