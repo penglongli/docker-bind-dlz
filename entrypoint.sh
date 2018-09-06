@@ -3,7 +3,7 @@
 BIND_SYSDIR=/etc/named
 
 # init named.conf ${MYSQL_DATA_SOURCE}
-envsubst < /etc/named/named.conf.template > /etc/named/named.conf
+envsubst '${MYSQL_DATA_SOURCE}' < /etc/named/named.conf.template > /etc/named/named.conf
 
 # with bind_exporter
 if [ ${ENABLE_EXPORTER} ]; then
