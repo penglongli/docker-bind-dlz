@@ -5,12 +5,13 @@ ARG BIND_SYSDIR=/etc/named
 ARG BIND_VERSION=9-12-2
 ARG BIND_VERSION_DOT=9.12.2
 
+COPY start.sh /
 COPY named.conf ${BIND_SYSDIR}/named.conf.template
 COPY entrypoint.sh /entrypoint.sh
 COPY statistics.conf /statistics.conf
 
 # install bind9
-RUN yum install -y gcc make perl-devel openssl-devel mysql-devel libxml2-devel wget gettext \
+RUN yum install -y gcc make perl-devel openssl-devel mysql-devel libxml2-devel wget gettext sysvinit-tools  \
     && curl -L https://www.isc.org/downloads/file/bind-${BIND_VERSION}/?version=tar-gz -o /tmp/bind.tar.gz \
     && tar -zxvf /tmp/bind.tar.gz -C /tmp \
     && cd /tmp/bind-${BIND_VERSION_DOT} \
@@ -26,6 +27,7 @@ RUN ${BIND_PREFIX}/sbin/rndc-confgen -r /dev/urandom > ${BIND_SYSDIR}/rndc.conf 
     && yum remove -y gcc make wget \
     && yum clean all
 
-EXPOSE 53
+EXPOSE 53/TCP 53/UDP 953 8053
 
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/start.sh"]
