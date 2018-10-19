@@ -56,9 +56,9 @@ INSERT INTO `dns_records` VALUES (4, 'test.com', 'www', 'A', '111.111.111.111', 
 Next step is run the `docker-bind-dlz`. Because `named` will use `port:953`, so need the `privileged` param.
 
 ```bash
-docker run -it -d --net=host \
-  -e MYSQL_DATA_SOURCE="host=? dbname=? ssl=false port=? user=? pass=?" \
-  --privileged --name=dns pelin/docker-bind-dlz
+docker run -it -d --net=host --restart always --privileged \
+  --env MYSQL_DATA_SOURCE="host=127.0.0.1 dbname=bind_dlz ssl=false port=3306 user=root pass=123456" \
+  --name=dns pelin/docker-bind-dlz
 ```
 You should pick `host` `dbname` `port` `user` `pass` with this command.
 
