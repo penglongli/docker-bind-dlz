@@ -25,7 +25,10 @@ RUN ${BIND_PREFIX}/sbin/rndc-confgen -r /dev/urandom > ${BIND_SYSDIR}/rndc.conf 
     && sed -i '/#rndc/r /tmp/tmp.conf' ${BIND_SYSDIR}/named.conf.template \
     && wget -O ${BIND_SYSDIR}/named.ca  http://www.internic.net/domain/named.root \
     && yum remove -y gcc make wget \
-    && yum clean all
+    && yum clean all \
+# change timezone and locale
+    && ln -sf /usr/share/zoneinfo/Brazil/West /etc/localtime \
+    && echo 'LANG="en_US.UTF-8"' > /etc/locale.conf
 
 EXPOSE 53/TCP 53/UDP 953 8053
 
