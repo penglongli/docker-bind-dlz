@@ -24,6 +24,8 @@ RUN ${BIND_PREFIX}/sbin/rndc-confgen -r /dev/urandom > ${BIND_SYSDIR}/rndc.conf 
     && tail -n 10 ${BIND_SYSDIR}/rndc.conf | head -n 9 | sed 's/#\ //g' > /tmp/tmp.conf \
     && sed -i '/#rndc/r /tmp/tmp.conf' ${BIND_SYSDIR}/named.conf.template \
     && wget -O ${BIND_SYSDIR}/named.ca  http://www.internic.net/domain/named.root \
+    && mkdir ${BIND_SYSDIR}/acl && touch ${BIND_SYSDIR}/acl/acl.conf \
+    && mkdir ${BIND_SYSDIR}/view && touch ${BIND_SYSDIR}/view/view.conf \
     && yum remove -y gcc make wget \
     && yum clean all \
 # change timezone and locale
