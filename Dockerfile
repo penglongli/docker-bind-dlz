@@ -29,7 +29,7 @@ RUN ${BIND_PREFIX}/sbin/rndc-confgen -r /dev/urandom > ${BIND_SYSDIR}/rndc.conf 
     && yum remove -y gcc make wget \
     && yum clean all \
 # change timezone and locale
-    && ln -sf /usr/share/zoneinfo/Brazil/West /etc/localtime \
+    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo 'LANG="en_US.UTF-8"' > /etc/locale.conf
 
 EXPOSE 53/TCP 53/UDP 953 8053
